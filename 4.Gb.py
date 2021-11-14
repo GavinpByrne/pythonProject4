@@ -22,6 +22,9 @@ df = pd.read_csv(r"C:\Users\Stackedadmin\Desktop\Flash_test_pandas.csv", encodin
 #print(df['Colour_Cost']*1.04)
 df['Colour_Cost'] = df['Colour_Cost']*1.04#just increases amount bu 1.04
 df['Colour_Cost_Increase'] = df['Colour_Cost']*1.15#adds column with new amount
+df['Colour_Cost_Total'] = df['Colour_Cost'].sum()#gives sum of Column
+df['Mono_Cost_Total'] = df['Mono_Cost'].sum()
 print(df.head())
-
+print(df.columns)
+print(df.sort_values(['Mono_Cost_Total'],ascending=False))
 
