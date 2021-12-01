@@ -13,9 +13,12 @@ print(df.columns)
 # plt.ylabel('No OF Houses')
 # plt.show()
 
-plt.scatter(df['COUNTY'], df['SALE_PRICE'])
-plt.xticks(rotation=45)
-plt.show()
+# plt.scatter(df['COUNTY'], df['SALE_PRICE'])
+# plt.xticks(rotation=45)
+# plt.show()
+
+PP = df[(df['COUNTY'] == 'Dublin') & (df['SALE_DATE'] > '20190101')]
+PP.to_csv(r'C:\Users\Stackedadmin\Desktop\Python\2020c.csv')
 
 
 
