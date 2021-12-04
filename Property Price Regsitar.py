@@ -2,9 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import requests
+import seaborn as sns
+
 # from bs4 import BeautifulSoup
+
 #
-df=pd.read_csv(r'C:\Users\Stackedadmin\Desktop\Python\Property_Price_Register_Ireland-28-05-2021.csv')
+df = pd.read_csv(r'C:\Users\Stackedadmin\Desktop\Python\Property_Price_Register_Ireland-28-05-2021.csv')
 # # # print(df.head())
 # # # print(df.shape)
 # # # print(df.info)
@@ -54,25 +57,28 @@ df=pd.read_csv(r'C:\Users\Stackedadmin\Desktop\Python\Property_Price_Register_Ir
 # print(college_df.columns)
 # print(uni2.columns)
 # county = college_df.merge(uni2,on='name',how='left')
-#idea is to use API to get college of Ireland-Webscrape Locations of those college sand then
+# idea is to use API to get college of Ireland-Webscrape Locations of those college sand then
 # create Dict with name and location- Then craete DIct into Dataframe and merge that with API DF so we can see what
-#counties have colleges. then merge that with house price data to see house prices with Universities verses not.
-#print(df['COUNTY'].value_counts())
-avg_county = df.groupby('COUNTY')['SALE_PRICE'].mean()
-print(avg_county)
+# counties have colleges. then merge that with house price data to see house prices with Universities verses not.
+# print(df['COUNTY'].value_counts())
+# avg_county = df.groupby('COUNTY')['SALE_PRICE'].mean()
+# print(avg_county)
+df500 = df[(df['SALE_PRICE'] == 500000) & (df['COUNTY'] == 'Dublin')]
+# print (df500)
+# sns.set_theme(style='darkgrid')
+# sns.countplot(x='COUNTY', data=df, orient='h')
+# plt.xticks(rotation=90)
+# plt.show()#counts no of records of sales per county
+# sns.scatterplot(x='COUNTY', y='SALE_PRICE', data=df, hue='IF_MARKET_PRICE')
+# plt.xticks(rotation=90)
+# plt.savefig('House_Test.jpg')
+# plt.show()
+df['SALE_DATE'] = pd.to_datetime(df['SALE_DATE'])
+df['year'] =pd.DatetimeIndex(df['SALE_DATE']).year
+#print(df['year'])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+sns.set_theme(style="darkgrid")
+sns.scatterplot(x=df['year'], y='SALE_PRICE', data=df, hue='IF_MARKET_PRICE')
+plt.xticks(rotation=90)
+plt.show()
 
