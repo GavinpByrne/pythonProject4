@@ -74,11 +74,24 @@ df500 = df[(df['SALE_PRICE'] == 500000) & (df['COUNTY'] == 'Dublin')]
 # plt.savefig('House_Test.jpg')
 # plt.show()
 df['SALE_DATE'] = pd.to_datetime(df['SALE_DATE'])
-df['year'] =pd.DatetimeIndex(df['SALE_DATE']).year
-#print(df['year'])
+df['year'] = pd.DatetimeIndex(df['SALE_DATE']).year
+# print(df['year'])
+#
+# sns.set_theme(style="darkgrid")
+# hue_colors = {0: 'black', 1: 'red'}
+# sns.scatterplot(x=df['year'], y='SALE_PRICE', data=df, hue='IF_MARKET_PRICE', hue_order=[1, 0], palette=hue_colors)
+# plt.xticks(rotation=90)
+# plt.show()
 
-sns.set_theme(style="darkgrid")
-sns.scatterplot(x=df['year'], y='SALE_PRICE', data=df, hue='IF_MARKET_PRICE')
-plt.xticks(rotation=90)
+avg_county = df.groupby('COUNTY')['SALE_PRICE'].mean()
+print(avg_county)
+avg_county.plot()
 plt.show()
+
+# avg_year = df.groupby(df['year'])['SALE_PRICE'].mean()
+# avg_year.plot()
+# plt.show()
+
+
+
 
