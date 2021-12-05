@@ -58,7 +58,7 @@ df = pd.read_csv(r'C:\Users\Stackedadmin\Desktop\Python\Property_Price_Register_
 # print(uni2.columns)
 # county = college_df.merge(uni2,on='name',how='left')
 # idea is to use API to get college of Ireland-Webscrape Locations of those college sand then
-# create Dict with name and location- Then craete DIct into Dataframe and merge that with API DF so we can see what
+# create Dict with name and location- Then create DIct into Dataframe and merge that with API DF so we can see what
 # counties have colleges. then merge that with house price data to see house prices with Universities verses not.
 # print(df['COUNTY'].value_counts())
 # avg_county = df.groupby('COUNTY')['SALE_PRICE'].mean()
@@ -94,7 +94,7 @@ yeardf = pd.DataFrame(avg_year)
 #print(yeardf.loc['2014':'2018'])
 # avg_year.plot()
 # plt.show()
-
+'''This is to show comparison between House prices and Annual Salaries Ireland between 2010 and 2020'''
 wages_dict = {2000: 36754, 2001: 38067, 2002: 38384, 2003: 39617, 2004: 40946, 2005: 42450, 2006: 42825,
          2007: 44021, 2008: 45842, 2009: 4942, 2010: 49487, 2011: 48962, 2012: 48491, 2013: 47267,
          2014: 46973, 2015: 46965, 2016: 47641, 2017: 48203, 2018: 48412, 2019: 49332, 2020: 49296}
@@ -104,26 +104,41 @@ for key, value in wages_dict.items():
 wages_items = wages_dict.items()
 wages_list = list(wages_items)
 wages_df = pd.DataFrame(wages_list)
-wages_df.columns=['year', 'Average Annual Salary']
-# print(wages_df.head())
-# print(type(wages_df))
-# print(avg_year)
+wages_df.columns = ['year', 'Average Annual Salary']
 house_price_wages = yeardf.merge(wages_df, on='year', how='left')
-print(house_price_wages)
-#sns.set_theme(style="ticks")
+house_price_wages.iloc[11:12, 2:4] = house_price_wages.iloc[5:11, 2:3].mean()
+# as I had no salary information from 2021 I used average from 2015 to 2020 to populate this figure. When
+#plotted this looked askew so I looked at % Increase by year to populate this value
+new_2021_avg = pd.DataFrame( house_price_wages.loc[(house_price_wages['year'] > 2018) & (house_price_wages['year'] < 2021)])
+house_price_wages.iloc[11:12, 2:4] = house_price_wages.iloc[10:11, 2:4]*1.02
 
-plt.style.use('ggplot')
+
+#print(Average_Salary2021)
+#print(house_price_wages.iloc[11:12, 2:4])
+# plt.style.use('ggplot')
+# fig, ax = plt.subplots()
+# ax.plot(house_price_wages['year'], house_price_wages['SALE_PRICE'], color='blue', linestyle='--',
+#         marker='<')
+# ax.set_xlabel('Year')
+# ax.set_ylabel('Average Yearly House Sell Price IRE', color='blue')
+# ax.tick_params('y', color='blue')
+# ax2 = ax.twinx()
+# ax2.plot(house_price_wages['year'], house_price_wages['Average Annual Salary'], color='red', linestyle='--',
+#          marker='<')
+# ax2.set_ylabel('Average Annual Salary IRE', color='red')
+# ax2.tick_params('y', color='red')
+#
+# plt.show()
+
+house_price_wages['% Change Salary'] = house_price_wages['Average Annual Salary'].pct_change()
+house_price_wages['% Change House Price'] = house_price_wages['SALE_PRICE'].pct_change()
+print(house_price_wages)
+plt.style.use('bmh')
 fig, ax = plt.subplots()
-ax.plot(house_price_wages['year'], house_price_wages['SALE_PRICE'], color='blue', linestyle='--',
-        marker='<')
+ax.bar(house_price_wages['year'], house_price_wages['% Change House Price'], label='House Price % Change')
+ax.bar(house_price_wages['year'], house_price_wages['% Change Salary'], label='Salary % Change')
 ax.set_xlabel('Year')
-ax.set_ylabel('Average Yearly Sell Price IRE', color='blue')
-ax.tick_params('y', color='blue')
-ax2 = ax.twinx()
-ax2.plot(house_price_wages['year'], house_price_wages['Average Annual Salary'], color='red', linestyle='--',
-         marker='<')
-ax2.set_ylabel('Average Annual Salary IRE', color='red')
-ax2.tick_params('y', color='red')
+ax.set_ylabel('% Difference')
 plt.legend()
 plt.show()
 
