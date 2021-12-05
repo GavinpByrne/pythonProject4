@@ -75,7 +75,7 @@ df500 = df[(df['SALE_PRICE'] == 500000) & (df['COUNTY'] == 'Dublin')]
 # plt.show()
 df['SALE_DATE'] = pd.to_datetime(df['SALE_DATE'])
 df['year'] = pd.DatetimeIndex(df['SALE_DATE']).year
-# print(df['year'])
+
 #
 # sns.set_theme(style="darkgrid")
 # hue_colors = {0: 'black', 1: 'red'}
@@ -83,15 +83,49 @@ df['year'] = pd.DatetimeIndex(df['SALE_DATE']).year
 # plt.xticks(rotation=90)
 # plt.show()
 
-avg_county = df.groupby('COUNTY')['SALE_PRICE'].mean()
-print(avg_county)
-avg_county.plot()
-plt.show()
+# avg_county = df.groupby('COUNTY')['SALE_PRICE'].mean()
+# print(avg_county)
+# avg_county.plot()
+# plt.show()
 
-# avg_year = df.groupby(df['year'])['SALE_PRICE'].mean()
+avg_year = df.groupby(df['year'])['SALE_PRICE'].mean()
+#print(avg_year)
+yeardf = pd.DataFrame(avg_year)
+#print(yeardf.loc['2014':'2018'])
 # avg_year.plot()
 # plt.show()
 
+wages_dict = {2000: 36754, 2001: 38067, 2002: 38384, 2003: 39617, 2004: 40946, 2005: 42450, 2006: 42825,
+         2007: 44021, 2008: 45842, 2009: 4942, 2010: 49487, 2011: 48962, 2012: 48491, 2013: 47267,
+         2014: 46973, 2015: 46965, 2016: 47641, 2017: 48203, 2018: 48412, 2019: 49332, 2020: 49296}
+#taken from https://www.statista.com/statistics/416212/average-annual-wages-ireland-y-on-y-in-euros/
+for key, value in wages_dict.items():
+    print(key, value)
+wages_items = wages_dict.items()
+wages_list = list(wages_items)
+wages_df = pd.DataFrame(wages_list)
+wages_df.columns=['year', 'Average Annual Salary']
+# print(wages_df.head())
+# print(type(wages_df))
+# print(avg_year)
+house_price_wages = yeardf.merge(wages_df, on='year', how='left')
+print(house_price_wages)
+#sns.set_theme(style="ticks")
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots()
+ax.plot(house_price_wages['year'], house_price_wages['SALE_PRICE'], color='blue', linestyle='--',
+        marker='<')
+ax.set_xlabel('Year')
+ax.set_ylabel('Average Yearly Sell Price IRE', color='blue')
+ax.tick_params('y', color='blue')
+ax2 = ax.twinx()
+ax2.plot(house_price_wages['year'], house_price_wages['Average Annual Salary'], color='red', linestyle='--',
+         marker='<')
+ax2.set_ylabel('Average Annual Salary IRE', color='red')
+ax2.tick_params('y', color='red')
+plt.legend()
+plt.show()
 
 
 
